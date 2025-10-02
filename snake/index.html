@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Snake</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <h1>Snake</h1>
+      <div class="scoreboard">
+        <span>Score: <strong id="score">0</strong></span>
+        <span>Best: <strong id="best">0</strong></span>
+        <button id="pauseBtn" class="btn" aria-label="Pause">Pause ⏸</button>
+        <button id="restartBtn" class="btn" aria-label="Restart">Restart ↻</button>
+      </div>
+    </header>
+
+    <main class="game-wrapper">
+      <canvas id="board" width="480" height="480" aria-label="Game board" role="img"></canvas>
+
+      <div class="dpad" aria-label="Touch controls">
+        <button class="d d-up" data-dir="up" aria-label="Up">▲</button>
+        <div class="d-mid">
+          <button class="d d-left" data-dir="left" aria-label="Left">◀</button>
+          <button class="d d-right" data-dir="right" aria-label="Right">▶</button>
+        </div>
+        <button class="d d-down" data-dir="down" aria-label="Down">▼</button>
+      </div>
+
+      <div id="overlay" class="overlay hidden" role="dialog" aria-live="polite">
+        <div class="panel">
+          <h2 id="stateTitle">Paused</h2>
+          <p id="stateSubtitle">Press Space or Tap to resume</p>
+          <div class="panel-actions">
+            <button class="btn btn-primary" id="resumeBtn">Resume</button>
+            <button class="btn" id="panelRestartBtn">Restart</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <span>Controls: Arrow Keys or WASD. Space to pause.</span>
+    </footer>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
