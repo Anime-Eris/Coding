@@ -34,6 +34,27 @@ body {
   align-items: center;
   gap: 10px;
 }
+.scoreboard .select {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.scoreboard .select > span {
+  opacity: 0.85;
+  font-size: 12px;
+}
+.scoreboard select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
+  color: #f2f6ff;
+}
+.scoreboard select:hover { background: rgba(255, 255, 255, 0.12); }
+.scoreboard select:focus {
+  outline: 2px solid rgba(79, 124, 255, 0.45);
+  outline-offset: 2px;
+}
 .btn {
   padding: 8px 12px;
   background: rgba(255, 255, 255, 0.08);

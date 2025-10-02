@@ -16,6 +16,15 @@
       <div class="scoreboard">
         <span>Score: <strong id="score">0</strong></span>
         <span>Best: <strong id="best">0</strong></span>
+        <label class="select">
+          <span>Difficulty</span>
+          <select id="difficulty" aria-label="Difficulty">
+            <option value="easy">Easy</option>
+            <option value="normal" selected>Normal</option>
+            <option value="hard">Hard</option>
+            <option value="insane">Insane</option>
+          </select>
+        </label>
         <button id="pauseBtn" class="btn" aria-label="Pause">Pause ⏸</button>
         <button id="restartBtn" class="btn" aria-label="Restart">Restart ↻</button>
       </div>

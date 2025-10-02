@@ -1,9 +1,15 @@
 // Constants
 const CELL_SIZE = 24; // px in canvas units
 const GRID_SIZE = 20; // 20x20 grid -> 480x480
-const INITIAL_SPEED_MS = 160; // lower is faster
-const SPEEDUP_FOOD_INTERVAL = 4; // every N foods eaten, speed up
-const SPEEDUP_FACTOR = 0.92; // multiply interval by this each speedup
+// Difficulty presets control speed behavior
+const DIFFICULTIES = {
+  easy:   { label: 'Easy',   initialSpeedMs: 200, speedupFoodInterval: 5, speedupFactor: 0.94, minTickMs: 100 },
+  normal: { label: 'Normal', initialSpeedMs: 160, speedupFoodInterval: 4, speedupFactor: 0.92, minTickMs: 75 },
+  hard:   { label: 'Hard',   initialSpeedMs: 120, speedupFoodInterval: 3, speedupFactor: 0.90, minTickMs: 60 },
+  insane: { label: 'Insane', initialSpeedMs: 90,  speedupFoodInterval: 2, speedupFactor: 0.88, minTickMs: 45 },
+};
+let difficultyKey = 'normal';
+let difficulty = DIFFICULTIES[difficultyKey];
 
 // Derived
 const CANVAS_SIZE = CELL_SIZE * GRID_SIZE;
@@ -30,6 +36,13 @@ function getRandomEmptyCell(exclusions) {
   }
 }
 
+function setDifficultyFromKey(key) {
+  if (!DIFFICULTIES[key]) key = 'normal';
+  difficultyKey = key;
+  difficulty = DIFFICULTIES[key];
+  localStorage.setItem('snake_difficulty', key);
+}
+
 function init() {
   canvas = document.getElementById('board');
   ctx = canvas.getContext('2d');
@@ -39,6 +52,12 @@ function init() {
   const bestFromStorage = Number(localStorage.getItem('snake_best') || '0');
   best = Number.isFinite(bestFromStorage) ? bestFromStorage : 0;
   document.getElementById('best').textContent = String(best);
+
+  // Difficulty: restore and reflect in UI
+  const savedDiff = localStorage.getItem('snake_difficulty') || 'normal';
+  setDifficultyFromKey(savedDiff);
+  const diffSelectEl = document.getElementById('difficulty');
+  if (diffSelectEl) diffSelectEl.value = difficultyKey;
 
   resetGame();
   bindControls();
@@ -51,7 +70,7 @@ function resetGame() {
   directionQueue = [{ x: 1, y: 0 }];
   food = getRandomEmptyCell(snake);
   score = 0;
-  tickMs = INITIAL_SPEED_MS;
+  tickMs = difficulty.initialSpeedMs;
   isPaused = false;
   isGameOver = false;
   updateScore(0);
@@ -96,6 +115,16 @@ function bindControls() {
       resume();
     }
   });
+
+  // Difficulty select
+  const diffSelect = document.getElementById('difficulty');
+  if (diffSelect) {
+    diffSelect.addEventListener('change', (e) => {
+      const newKey = e.target.value;
+      setDifficultyFromKey(newKey);
+      resetGame();
+    });
+  }
 }
 
 function keyToDir(key) {
@@ -181,8 +210,8 @@ function updateScore(delta) {
 
 function maybeSpeedUp() {
   const foodsEaten = Math.floor(score / 1);
-  if (foodsEaten > 0 && foodsEaten % SPEEDUP_FOOD_INTERVAL === 0) {
-    const newTick = Math.max(60, Math.floor(tickMs * SPEEDUP_FACTOR));
+  if (foodsEaten > 0 && foodsEaten % difficulty.speedupFoodInterval === 0) {
+    const newTick = Math.max(difficulty.minTickMs, Math.floor(tickMs * difficulty.speedupFactor));
     if (newTick !== tickMs) {
       tickMs = newTick;
       startLoop();
